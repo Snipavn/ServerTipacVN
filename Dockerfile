@@ -3,10 +3,7 @@ FROM debian:12
 # Install dependencies
 RUN apt update && apt install software-properties-common wget curl git openssh-client tmate python3 sudo neofetch -y && apt clean
 
-RUN curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | sudo bash && sudo apt-get install pufferpanel && sudo systemctl enable pufferpanel
-
-RUN sudo pufferpanel user add --email admin@servertipacvn --name ServerTipacVN --password svtipacvn --admin && sudo systemctl enable --now pufferpanel && apt clean
-# Create a dummy index page to keep the service alive
+# page to keep the service alive
 
 # Expose a fake web port to trick Railway into keeping container alive
 EXPOSE 8080
