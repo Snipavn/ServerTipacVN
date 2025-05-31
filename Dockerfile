@@ -12,9 +12,18 @@ RUN systemctl restart pufferpanel
 RUN echo "Ok"
 # page to keep the service alive
 
+RUN curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
+  | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+  && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
+  | sudo tee /etc/apt/sources.list.d/ngrok.list \
+  && sudo apt update \
+  && sudo apt install ngrok
+RUN ngrok config add-authtoken 2x2On2r9mfo5WTrl6OQJiMvi3xY_7SfeNm4NS24qEwKErpMB6
+
 # Expose a fake web port to trick Railway into keeping container alive
 EXPOSE 8080
 
 # Start a dummy Python web server to keep Railway service active
 # and start tmate session
-CMD python3 -m http.server 8080
+CMD python3 -m http.server 8080 & \
+    ngrok http 8080
